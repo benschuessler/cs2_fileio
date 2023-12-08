@@ -1,10 +1,24 @@
-#Name
-#Descrption
-#Bugs
-#Bonuses
-#TestCases:
-#Log: 1/1/2023 - Added Main
-
+#Ben Schuessler
+#This program takes in GCDS's student data to answer different questions
+#No known bugs
+#Bonuses: Graph
+"""
+TestCases: 
+1) count criteria in the database (check_seniors)
+2) Make decisions using data In the database (check_males) (check_females)
+3) Make simple selections In the database (check_ct) (check_ny)
+4) Make complex selections from the data using several criteria (check_ziptally)
+5) Make selections from the database using user input values (check_zipcode) (check_info)
+6) include no match results (check info)
+7) add new data records to data base (check_add_data)
+8) List students by first name, last name sorted by last name (check_names)
+9) Write any given output to a file as ".csv" (check_add_data) (check_remove_data)
+10) Program Repeats
+11) Use functions to organize the program
+12) Create menu to execute functions
+13) Delete records from database (check_remove_data)
+14) Create graphs with data (graph_students)
+""" 
 
 
 import csv
@@ -31,6 +45,7 @@ def main():
     print("9) Print graph of males and females")
     print("10) Print all students sorted by last name")
     print("11) Add student information")
+    print("12) Remove student information")
    
     while go is True:
         answer = input("Enter Choice or 'Q' to quit")
@@ -56,11 +71,12 @@ def main():
             check_names(file_input)      
         elif answer == "11":
             check_add_data(file_input)   
+        elif answer == "12":
+            check_remove_data(file_input)
         elif answer == "Q":
             go = False
             print("bye")
-            return
-           
+    
 
 
 
@@ -226,6 +242,24 @@ def check_add_data(file_in):
     var_name = csv.writer(f)
     var_name.writerow(add)                                                   
     f.close()
+
+def check_remove_data(file_in):
+    #Description: Allows user to remove student data from data sheet
+    #Takes user input (last name): removes student from data
+    #Returns: void
+    file_in.seek(1)
+    remove_lastname = input("enter the last name you want to remove")
+    new_list = []
+    for record in file_in:
+        kid = record.split(",")
+        try:
+            a = kid[2]
+        except:
+            print(kid)
+        if kid[2] == remove_lastname:
+            continue
+        else:
+            new_list.append(record)
 
 if __name__ == '__main__':
     main()
