@@ -1,7 +1,7 @@
 #Ben Schuessler
 #This program takes in GCDS's student data to answer different questions
-#No known bugs
-#Bonuses: Graph
+#No known bugs: entering unknown zipcode breaks code
+#Bonuses: 12) Delete records from database (check_remove_data), 14) Create graphs with data (graph_students)
 """
 TestCases: 
 1) count criteria in the database (check_seniors)
@@ -11,14 +11,11 @@ TestCases:
 5) Make selections from the database using user input values (check_zipcode) (check_info)
 6) include no match results (check info)
 7) add new data records to data base (check_add_data)
-10) Program Repeats
 9) List students by first name, last name sorted by last name (check_names)
 9a) Write any given output to a file as ".csv" (check_add_data) (check_remove_data)
 9b) Program Repeats
 10) Use functions to organize the program
 10a) Create menu to execute functions
-12) Delete records from database (check_remove_data)
-14) Create graphs with data (graph_students)
 """ 
 from pathlib import Path
 current_dir = Path(__file__).parent
@@ -52,6 +49,7 @@ def main():
    
     while go is True:
         answer = input("Enter Choice or 'Q' to quit")
+        print("52: answer is: " + answer)
         if answer == "1":
             check_seniors(file_input)
         elif answer == "2":
@@ -92,7 +90,7 @@ def check_seniors(file_in):
 
     for record in file_in:
         kid = record.split(",")
-        if kid[0] == '\n':
+        if kid[0][:-1] == '\n':
             continue
         if kid[3] == "12":
             seniors += 1
@@ -104,12 +102,14 @@ def check_males(file_in):
     #Description: checks number of male students in all grades
     #Takes column 4 data (gender): kid[4]
     #Returns number of males: males
+    print('INSIDE OF CHECK MALES')
     males = 0
     file_in.seek(1)                                     #move pointer to line 1
 
     for record in file_in:
+        print(record)
         kid = record.split(",")
-        if kid[0] == '\n':
+        if kid[0][:-1] == '\n':
             continue
         if kid[4] == "M":
             males += 1
@@ -124,7 +124,7 @@ def check_females(file_in):
     
     for record in file_in:
         kid = record.split(",")
-        if kid[0] == '\n':
+        if kid[0][:-1] == '\n':
             continue
         if kid[4] == "F":
             females += 1
@@ -139,7 +139,7 @@ def check_ct(file_in):
 
     for record in file_in:
         kid = record.split(",")
-        if kid[0] == '\n':
+        if kid[0][:-1] == '\n':
             continue
         if kid[8] == "CT":
             ct += 1
@@ -154,7 +154,7 @@ def check_ny(file_in):
 
     for record in file_in:
         kid = record.split(",")
-        if kid[0] == '\n':
+        if kid[0][:-1] == '\n':
             continue
         if kid[8] == "NY":
             ny += 1
@@ -170,7 +170,7 @@ def check_info(file_in):
     file_in.seek(1)
     for record in file_in:
         kid = record.split(",")
-        if kid[0] == '\n':
+        if kid[0][:-1] == '\n':
             continue
 
         if student[0] == kid [0] and student[1] == kid [2]:
@@ -191,7 +191,7 @@ def check_zipcode(file_in):
     a = 1
     for record in file_in:
         kid = record.split(",")
-        if kid[0] == '\n':
+        if kid[0][:-1] == '\n':
             continue
         if a or kid[0] in ['Oya']:
             a = False
@@ -216,7 +216,7 @@ def check_ziptally(file_in):
     a = 1
     for record in file_in:
         kid = record.split(",")
-        if kid[0] == '\n':
+        if kid[0][:-1] == '\n':
             continue
         if a or kid[0] in ['Oya']:
             a = False
@@ -238,7 +238,7 @@ def graph_students(file_in):
 
     for record in file_in:
         kid = record.split(",")
-        if kid[0] == '\n':
+        if kid[0][:-1] == '\n':
             continue
         total += 1
         if kid[4].strip() == "M":
@@ -261,7 +261,7 @@ def check_names(file_in):
     file_in.seek(1)
     for record in file_in:
         kid = record.split(",")
-        if kid[0] == '\n':
+        if kid[0][:-1] == '\n':
             continue
         print(kid[0], kid[2])
 
@@ -272,7 +272,7 @@ def check_add_data(file_in):
     add_info = input("Type in the data for a student. Input their first name, middle name, last name, grade, gender (M/F), teacher's first and last name, town, state, zipcode: (seperate all info by commas)")
     add = add_info.split(",")
     f = open(file_path,"a+")
-    var_name = csv.writer(f)
+    var_name = csv.writer(f,  lineterminator="\n")
     var_name.writerow(add)                                                   
     f.close()
 
@@ -285,7 +285,7 @@ def check_remove_data(file_in):
     new_list = []
     for record in file_in:
         kid = record.split(",")
-        if kid[0] == '\n':
+        if kid[0][:-1] == '\n':
             continue
         try:
             a = kid[2]
